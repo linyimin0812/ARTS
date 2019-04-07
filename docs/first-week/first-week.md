@@ -1,3 +1,13 @@
+> Time: 2019.04.01 - 2019.04.07
+
+> Algorithm: Two Sum
+>  
+> Review: Overview of Blocking vs Non-Blocking
+> 
+> Share: HashMap
+> 
+> Tip: Returns a power of two size for the given target capacity
+
 ## Algorithm
 
 ### Two Sum
