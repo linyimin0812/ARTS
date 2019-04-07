@@ -100,7 +100,27 @@ var twoSum = function(nums, target) {
 
 ## Review
 
+[Overview of Blocking vs Non-Blocking](https://nodejs.org/en/docs/guides/blocking-vs-non-blocking/)
 
+**阻塞和非阻塞概览**
+
+- Node中的IO表示与`libuv`支持的系统磁盘和网络进行的相关交互.
+
+- **阻塞**: 当有阻塞操作正在执行时,事件循环机制(Event Loop)不能继续执行JS代码.
+
+- NodeJS对CPU密集型的运算性能很差.
+
+- 在Node中所有的IO操作都提供了异步版本(非阻塞).
+
+在使用同步方法时,若抛出异常,需要我们主动去捕获,否则整个Node进程会崩溃,程序中止.而对于异步方法来说,异常错误以回调函数参数的形式返回,用户可以根据需求对异常错误进行定制化处理,不会引起进程的崩溃.
+
+**并发和吞吐量**
+
+Node是单进程的,其并发能力是指事件循环机制(Event Loop)在完成其他工作之后执行回调函数的能力.任何代码如果期望以并发的方式执行,则必须满足:
+
+<font color="#dd0000">在发生非JS操作时(IO), 事件循环(Event Loop)能继续运行</font>
+
+需要注意的是:<font color="#dd0000">阻塞代码和非阻塞代码混合可能会引起错误, 并非会按照代码的顺序执行,这一点在编码的时候应该特别注意.</font>
 
 ## Share
 
@@ -284,6 +304,14 @@ int hash(int capacity, void *key) {
 ```
 
 [具体实现](https://github.com/linyimin-bupt/The-Beauty-of-Data-Structures-and-Algorithms/blob/master/src/hash-map/hashMap.c)
+
+### 参考链接
+
+[散列表（上）：Word文档中的单词拼写检查功能是如何实现的？](https://time.geekbang.org/column/article/64233)
+
+[散列表（中）：如何打造一个工业级水平的散列表？](https://time.geekbang.org/column/article/64586)
+
+[C语言实现HashMap](https://zhuanlan.zhihu.com/p/54017133)
 
 ## Tip
 
