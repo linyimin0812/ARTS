@@ -8,6 +8,27 @@
 > 
 > Tip: Returns a power of two size for the given target capacity
 
+<!-- TOC -->
+
+- [Algorithm](#algorithm)
+  - [Two Sum](#two-sum)
+  - [解法1: 暴力法](#%E8%A7%A3%E6%B3%951-%E6%9A%B4%E5%8A%9B%E6%B3%95)
+  - [两重Map](#%E4%B8%A4%E9%87%8Dmap)
+  - [一重Map](#%E4%B8%80%E9%87%8Dmap)
+- [Review](#review)
+- [Share](#share)
+  - [解决散列冲突的方法](#%E8%A7%A3%E5%86%B3%E6%95%A3%E5%88%97%E5%86%B2%E7%AA%81%E7%9A%84%E6%96%B9%E6%B3%95)
+    - [线性探测法](#%E7%BA%BF%E6%80%A7%E6%8E%A2%E6%B5%8B%E6%B3%95)
+    - [二次探测](#%E4%BA%8C%E6%AC%A1%E6%8E%A2%E6%B5%8B)
+    - [双重散列](#%E5%8F%8C%E9%87%8D%E6%95%A3%E5%88%97)
+  - [链表法](#%E9%93%BE%E8%A1%A8%E6%B3%95)
+  - [散列表的实现](#%E6%95%A3%E5%88%97%E8%A1%A8%E7%9A%84%E5%AE%9E%E7%8E%B0)
+    - [散列函数的实现](#%E6%95%A3%E5%88%97%E5%87%BD%E6%95%B0%E7%9A%84%E5%AE%9E%E7%8E%B0)
+  - [参考链接](#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5)
+- [Tip](#tip)
+
+<!-- /TOC -->
+
 ## Algorithm
 
 ### Two Sum
