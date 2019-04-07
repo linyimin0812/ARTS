@@ -283,6 +283,7 @@ int hash(int capacity, void *key) {
 }
 ```
 
+[具体实现](https://github.com/linyimin-bupt/The-Beauty-of-Data-Structures-and-Algorithms/blob/master/src/hash-map/hashMap.c)
 
 ## Tip
 
