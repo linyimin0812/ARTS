@@ -201,3 +201,47 @@ int** threeSum(int* nums, int numsSize, int* returnSize) {
 ### 参考链接
 
 [Concise O(N^2) Java solution](https://leetcode.com/problems/3sum/discuss/7380/Concise-O(N2)-Java-solution)
+
+## Review
+
+## Share
+
+> C语言实现一个堆
+
+### 堆的定义
+
+## Tip
+
+### 使用ssh配置文件管理ssh会话
+
+如果拥有多个 SSH 账号，在终端里直接 SSH 登陆要记住每个 SSH 账号的参数是件不容易的事，而且比较浪费精力和时间。ssh提供了一种很优雅的方式解决这个问题.
+
+> ssh配置文件
+
+```
+用户配置文件: ~/.ssh/config
+系统配置文件: /etc/ssh/ssh_config
+```
+
+配置文件可分为多个配置区段，每个配置区段使用"Host"来区分。
+
+#### 常用配置项
+
+- Host 别名
+- HostName 主机名
+- Port 端口
+- User 用户名
+- IdentityFile 密钥文件的路径
+- IdentitiesOnly 只接受SSH key 登录
+- PreferredAuthentications 强制使用Public Key验证 
+
+#### 例子
+
+```
+Host    padpro
+        HostName 52.82.35.148
+        User root
+        IdentityFile /home/linyimin/.ssh/id_rsa
+```
+
+这样在终端直接使用`ssh padpro`即可连接上主机,不需要去记任何参数
