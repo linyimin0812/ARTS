@@ -2,13 +2,42 @@
 
 > Algorithm: 3Sum
 >  
-> Review: Overview of Blocking vs Non-Blocking
+> Review: How to self detect a memory leak in node
 > 
-> Share: HEAP
+> Share: Heap
 > 
-> Tip: Returns a power of two size for the given target capacity
+> Tip: 使用ssh配置文件管理ssh会话
 
 
+<!-- TOC -->
+
+- [Algorithm](#algorithm)
+  - [实现思路](#实现思路)
+  - [完整代码](#完整代码)
+  - [参考链接](#参考链接)
+- [Review](#review)
+  - [追踪Node应用中的内存泄露](#追踪node应用中的内存泄露)
+    - [一个简单的内存泄露例子](#一个简单的内存泄露例子)
+    - [内存泄露探测](#内存泄露探测)
+    - [内存泄露分析](#内存泄露分析)
+- [Share](#share)
+  - [堆的定义](#堆的定义)
+  - [堆的存储](#堆的存储)
+  - [堆化(Heapify)](#堆化heapify)
+    - [实现堆化的两种操作](#实现堆化的两种操作)
+      - [由上到下调整(shiftDown)](#由上到下调整shiftdown)
+      - [由下到上调整(shiftUp)](#由下到上调整shiftup)
+  - [堆常用的两种操作](#堆常用的两种操作)
+    - [插入数据](#插入数据)
+    - [删除数据(取出堆顶元素)](#删除数据取出堆顶元素)
+  - [堆的应用](#堆的应用)
+    - [堆排序](#堆排序)
+- [Tip](#tip)
+  - [使用ssh配置文件管理ssh会话](#使用ssh配置文件管理ssh会话)
+    - [常用配置项](#常用配置项)
+    - [例子](#例子)
+
+<!-- /TOC -->
 
 ## Algorithm
 
@@ -204,11 +233,184 @@ int** threeSum(int* nums, int numsSize, int* returnSize) {
 
 ## Review
 
+[how-to-self-detect-a-memory-leak-in-node](https://www.nearform.com/blog/how-to-self-detect-a-memory-leak-in-node/)
+
+### 追踪Node应用中的内存泄露
+
+使用Node的--flag标签, `memwatch`和`heapdump`两个很棒的工具完成Node应用的内存泄露跟踪
+
+#### 一个简单的内存泄露例子
+
+```javascript
+const http = require('http');
+
+var server = http.createServer((req, res) => {
+ for (var i=0; i<1000; i++) {
+ server.on('request', function leakyfunc() {});
+ }
+
+ res.end('Hello World\n');
+}).listen(1337, '127.0.0.1');
+server.setMaxListeners(0);
+
+console.log('Server running at http://127.0.0.1:1337/. Process PID: ', process.pid);
+```
+
+上诉的代码,我们为每个请求添加了额外的1000个监听者.然后使用`autocannonn`进行压测. `autocannon`是一个node实现的压测工具, 使用`sudo npm install autocannon -g`进行安装.
+
+在一个终端中运行`autocannon -c 1 -d 60 http://localhost:1337`进行施压. 
+
+![压测结果](images/benchmark.png)
+
+然后打开另一个终端使用`top | head -1; top | grep <process pid>`上面例子对应的进程的内存使用量非常高,而且很不稳定. 
+
+![内存使用情况](images/memory-usage.png)
+
+接下来我们如何进行分析呢?
+
+#### 内存泄露探测
+
+`node-memwatch`更适合检测内存泄露. 首先在我们的项目中使用`npm install --save node-memwatch`安装, 然后在代码中添加:
+
+```javascript
+const memwatch = require('node-memwatch')
+
+// 添加泄漏事件的监听器
+memwatch.on('leak', (info) => {
+  console.log('Memory leak detected:\n', info)
+})
+```
+
+然后继续运行我们的程序, 现在终端会输出以下结果:
+
+![内存泄露](images/memory-leak.png)
+
+可以看到`memwatch`检测到了内存泄露, `memwatch`对泄露事件的定义是: 如果经过连续5次GC, 内存仍被持续分配而没有得到释放
+
+#### 内存泄露分析
+
+接下来, 我们要找出程序哪里出现了内存泄露.虽然我们上面的例子泄露很明显, 但是分析的步骤是一样的:
+
+1. 在不同的时间间隔创建堆存储
+2. 比较不同时间间隔的堆存储, 找出什么增长了
+
+有两种方式可以完成上述分析:
+
+1. `--flag`标签
+
+```shell
+$ node --inspect index.js
+```
+
+打开浏览器,在地址栏输入`chrome://inspect/`, 然后选择`inspect`
+
+![浏览器-insepct](images/inspect.png)
+
+使用命令`autocannon -c 1 -d 60 http://localhost:1337`加压
+
+然后点击取得快照, 30秒后在取一次
+
+![取得快照](images/take-snapshot.png)
+
+![快照信息](images/snapshot.png)
+
+关于内存更精彩的分析可以查看[Taming The Unicorn: Easing JavaScript Memory Profiling In Chrome DevTools](https://addyosmani.com/blog/taming-the-unicorn-easing-javascript-memory-profiling-in-devtools/)
+
+2. 使用`Heapdump`
+
+`node-heapdump`是一个非常好的工具, 可以在应用代码内部生成一个快照.关于更过`heapdump`可以查看[blog post](https://strongloop.com/strongblog/how-to-heap-snapshots/).现在我们直接在代码中使用`heapdump`, 在每次检查到内存泄露时, 将V8栈快照信息写到磁盘上.
+
+```javascript
+memwatch.on('leak', (info) => {
+  console.error('Memory leak detected:\n', info);
+  heapdump.writeSnapshot((err, filename) => {
+    if (err) console.error(err);
+    else console.error('Wrote snapshot: ' + filename);
+})
+```
+
+![](images/heapdump.png)
+
+可以看到生成了相关的快照文件, 导入DevTools即可得到与之前`--inspect`一样的效果.
+
 ## Share
 
 > C语言实现一个堆
 
 ### 堆的定义
+
+- 堆是一颗完全二叉树
+- 每个节点的值都大于其子树每个节点的值(最大堆)
+
+### 堆的存储
+
+由于堆是一颗完全二叉树,所以非常适合使用数组进行存储.
+
+> 使用数组存储堆, 可以使用数组下标查找指定节点的左右孩子节点和其父节点, 假设节点所在数组索引为`i`, 则:
+
+父节点: <font color>="#dd0000>parent(i) = i / 2</font>
+左孩子: <font color>="#dd0000>left(i) = 2 * i</font>
+右孩子: <font color>="#dd0000>right(i) = 2 * i + 1</font>/
+
+
+### 堆化(Heapify)
+
+往堆中插入新的元素或者删除元素之后,数组对应的完全二叉树会不满足堆的性质, 需要进行相关的调整, 使其重新满足堆的特性的过程就是<font color="#dd0000">堆化<font/>
+
+#### 实现堆化的两种操作
+
+##### 由上到下调整(shiftDown)
+
+在删除操作中会使用`shiftDown`操作实现数组的堆化
+
+**堆化过程**
+
+设需要调整的元素对应的索引是`i`:
+
+1. 先与左右孩子进行比较,若大于左右孩子的值,说明数组对应的结构满足堆的定义,堆化完成
+2. 若小于左右孩子节点, 则与较大的孩子节点交换位置, 易知, 若较大的孩子节点为左孩子, 则交换后原来索引`i`对应的节点索引变为`2 * i`(完全二叉树的定义), 若较大的孩子节点为右孩子节点, 则交换后原来索引`i`对应的节点索引变为`2 * i+ 1`
+3. 重复第一、第二步, 直至数组对应的完全二叉树满足堆的定义。
+
+##### 由下到上调整(shiftUp)
+
+在插入操作中会使用`shitUp`操作实现数组的堆化
+
+**堆化过程**
+
+设需要调整的元素对应的索引是`i`:
+
+1. 先与父节点进行比较,若小于父节点的值,说明数组对应的结构满足堆的定义,堆化完成
+2. 若小于父节点对应的值, 则与父节点交换位置, 易知, 则交换后原来索引`i`对应的节点索引变为`i / 2`(完全二叉树的定义)
+3. 重复第一、第二步, 直至数组对应的完全二叉树满足堆的定义。
+
+
+### 堆常用的两种操作
+
+#### 插入数据
+
+1. 将新元素放置数组末尾
+2. 对数组末尾元素进行`shiftUp`操作
+
+![堆的插入操作](images/heap-insert1.jpg)
+
+![shiftUp](images/heap-insert2.jpg)
+
+
+#### 删除数据(取出堆顶元素)
+
+1. 取出数组末尾元素与堆顶元素交换
+2. 对堆顶元素进行`shiftDown`操作
+
+![堆的删除操作](images/heap-delete.jpg)
+
+### 堆的应用
+
+#### 堆排序
+
+堆排序由两个步骤完成：
+
+1. 建堆
+2. 排序
 
 ## Tip
 
