@@ -1,12 +1,11 @@
 # ARTS
 
-Algorithm:  至少一个leetcode算法题
-
-Review:     至少阅读并点评一篇英文技术文章
-
-Tip:        至少学习一个技术技巧
-
-Share:      至少分享一篇有观点和思考的技术文章
+<pre>
+<font color="#dd0000">Algorithm</font>: 至少一个leetcode算法题
+<font color="#dd0000">Review   </font>: 至少阅读并点评一篇英文技术文章
+<font color="#dd0000">Tip      </font>: 至少学习一个技术技巧
+<font color="#dd0000">Share    </font>: 至少分享一篇有观点和思考的技术文章
+</pre>
 
 ## [First Week](./docs/first-week/first-week.md)
 
