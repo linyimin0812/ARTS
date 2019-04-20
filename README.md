@@ -31,3 +31,15 @@
 > Share: [Heap](./docs/second-week/second-week.md#Share)
 > 
 > Tip: [使用ssh配置文件管理ssh会话](./docs/second-week/second-week.md#Tip)
+
+## [Third Week](./docs/third-week/third-week.md)
+
+> Time: 2019.04.15 - 2019.04.21
+>
+> Algorithm: [Majority Element](./docs/third-week/third-week.md#algorithm)
+>  
+> Review: [Majority Voting Algorithm](./docs/third-week/third-week.md#Review)
+> 
+> Share: [Typescript实现一个DedupeAPI类](./docs/third-week/third-week.md#Share)
+> 
+> Tip: [Markdown TO插件生成markdown目录](./docs/third-week/third-week.md#Tip)
