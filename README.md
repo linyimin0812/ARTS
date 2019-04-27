@@ -7,39 +7,39 @@
 <font color="#dd0000">Share    </font>: 至少分享一篇有观点和思考的技术文章
 </pre>
 
-## [First Week](./docs/first-week/first-week.md)
+## [1st Week](./docs/1st-week/1st-week.md)
 
 >Time: 2019.04.01 - 2019.04.07
 >
->Algorithm: [Two Sum](./docs/first-week/first-week.md#algorithm)
+>Algorithm: [Two Sum](./docs/1st-week/1st-week.md#algorithm)
 >
->Review: [Overview of Blocking vs Non-Blocking](./docs/first-week/first-week.md#review)
+>Review: [Overview of Blocking vs Non-Blocking](./docs/1st-week/1st-week.md#review)
 >
->Share: [HashMap](./docs/first-week/first-week.md#share)
+>Share: [HashMap](./docs/1st-week/1st-week.md#share)
 >
->Tip: [Returns a power of two size for the given target capacity](./docs/first-week/first-week.md#tip)
+>Tip: [Returns a power of two size for the given target capacity](./docs/1st-week/1st-week.md#tip)
 
 
-## [Second Week](./docs/second-week/second-week.md)
+## [2nd Week](./docs/2nd-week/2nd-week.md)
 
 > Time: 2019.04.08 - 2019.04.15
 >
-> Algorithm: [3Sum](./docs/second-week/second-week.md#algorithm)
+> Algorithm: [3Sum](./docs/2nd-week/2nd-week.md#algorithm)
 >  
-> Review: [How to self detect a memory leak in node](./docs/second-week/second-week.md#Review)
+> Review: [How to self detect a memory leak in node](./docs/2nd-week/2nd-week.md#Review)
 > 
-> Share: [Heap](./docs/second-week/second-week.md#Share)
+> Share: [Heap](./docs/2nd-week/2nd-week.md#Share)
 > 
-> Tip: [使用ssh配置文件管理ssh会话](./docs/second-week/second-week.md#Tip)
+> Tip: [使用ssh配置文件管理ssh会话](./docs/2nd-week/2nd-week.md#Tip)
 
-## [Third Week](./docs/third-week/third-week.md)
+## [3rd Week](./docs/3rd-week/3rd-week.md)
 
 > Time: 2019.04.15 - 2019.04.21
 >
-> Algorithm: [Majority Element](./docs/third-week/third-week.md#algorithm)
+> Algorithm: [Majority Element](./docs/3rd-week/3rd-week.md#algorithm)
 >  
-> Review: [Majority Voting Algorithm](./docs/third-week/third-week.md#Review)
+> Review: [Majority Voting Algorithm](./docs/3rd-week/3rd-week.md#Review)
 > 
-> Share: [Typescript实现一个DedupeAPI类](./docs/third-week/third-week.md#Share)
+> Share: [Typescript实现一个DedupeAPI类](./docs/3rd-week/3rd-week.md#Share)
 > 
-> Tip: [Markdown TO插件生成markdown目录](./docs/third-week/third-week.md#Tip)
+> Tip: [Markdown TO插件生成markdown目录](./docs/3rd-week/3rd-week.md#Tip)
