@@ -172,6 +172,27 @@ int firstMissingPositive(int* nums, int numsSize){
 
 [简单理解Socket](https://www.cnblogs.com/dolphinX/p/3460545.html)
 
-
-
 ## Tip
+
+### VSCode使用技巧
+
+#### 主命令框
+
+快捷键打开`Ctrl + Shift + P`或者`F1`打开命令面板.
+
+- \> 执行VSCode中的命令
+- 直接输入文件名,跳转文件
+- ? 列出当前可执行的操作
+- : 跳转到指定行数
+- @ 跳转到Symbol(搜索变量或者函数)
+
+
+#### 常用快捷键
+
+- `Ctrl + G`: 跳转到指定行
+- `F8`: 跳转到下一个error或者warning
+- `F12`: 跳转到定义处
+- `F2`: 重命名
+- `Ctrl + F`: 查找
+- `Ctrl + H`: 查找替换
+- `Shift + Ctrl + F`: 这个文件夹中查找
