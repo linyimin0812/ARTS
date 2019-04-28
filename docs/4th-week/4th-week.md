@@ -2,12 +2,40 @@
 >
 > Algorithm: First Missing Positive
 >  
-> Review: 
+> Review: What are some of the best ways to learn programming?
 > 
 > Share: 网络编程和Socket概要
 > 
 > Tip: VSCode使用技巧
 
+<!-- TOC -->
+
+- [Algorithm(First Missing Positive)](#algorithmfirst-missing-positive)
+  - [解法1: 使用额外的数组空间](#%E8%A7%A3%E6%B3%951-%E4%BD%BF%E7%94%A8%E9%A2%9D%E5%A4%96%E7%9A%84%E6%95%B0%E7%BB%84%E7%A9%BA%E9%97%B4)
+    - [分析](#%E5%88%86%E6%9E%90)
+    - [代码实现](#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0)
+  - [解法2](#%E8%A7%A3%E6%B3%952)
+    - [分析](#%E5%88%86%E6%9E%90-1)
+    - [代码实现](#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0-1)
+- [Review](#review)
+  - [专注于兴趣，而非目标](#%E4%B8%93%E6%B3%A8%E4%BA%8E%E5%85%B4%E8%B6%A3%E8%80%8C%E9%9D%9E%E7%9B%AE%E6%A0%87)
+  - [单独学习是痛苦的](#%E5%8D%95%E7%8B%AC%E5%AD%A6%E4%B9%A0%E6%98%AF%E7%97%9B%E8%8B%A6%E7%9A%84)
+  - [编写项目](#%E7%BC%96%E5%86%99%E9%A1%B9%E7%9B%AE)
+- [Share(网络编程和Socket概要)](#share%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B%E5%92%8Csocket%E6%A6%82%E8%A6%81)
+- [网络编程和Socket概要](#%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B%E5%92%8Csocket%E6%A6%82%E8%A6%81)
+  - [Socket的类型](#socket%E7%9A%84%E7%B1%BB%E5%9E%8B)
+  - [服务器端socket(接受连接请求)](#%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%AB%AFsocket%E6%8E%A5%E5%8F%97%E8%BF%9E%E6%8E%A5%E8%AF%B7%E6%B1%82)
+  - [客户端socket(请求连接)](#%E5%AE%A2%E6%88%B7%E7%AB%AFsocket%E8%AF%B7%E6%B1%82%E8%BF%9E%E6%8E%A5)
+  - [补充：基于Linux的文件操作](#%E8%A1%A5%E5%85%85%E5%9F%BA%E4%BA%8Elinux%E7%9A%84%E6%96%87%E4%BB%B6%E6%93%8D%E4%BD%9C)
+    - [文件描述符(File Descriptor)](#%E6%96%87%E4%BB%B6%E6%8F%8F%E8%BF%B0%E7%AC%A6file-descriptor)
+  - [补充：以`_t`为后缀的数据类型](#%E8%A1%A5%E5%85%85%E4%BB%A5t%E4%B8%BA%E5%90%8E%E7%BC%80%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B)
+  - [参考连接](#%E5%8F%82%E8%80%83%E8%BF%9E%E6%8E%A5)
+- [Tip](#tip)
+  - [VSCode使用技巧](#vscode%E4%BD%BF%E7%94%A8%E6%8A%80%E5%B7%A7)
+    - [主命令框](#%E4%B8%BB%E5%91%BD%E4%BB%A4%E6%A1%86)
+    - [常用快捷键](#%E5%B8%B8%E7%94%A8%E5%BF%AB%E6%8D%B7%E9%94%AE)
+
+<!-- /TOC -->
 
 ## Algorithm(First Missing Positive)
 
@@ -115,6 +143,20 @@ int firstMissingPositive(int* nums, int numsSize){
 ```
 
 ## Review
+
+[What are some of the best ways to learn programming?](https://www.quora.com/What-are-some-of-the-best-ways-to-learn-programming)
+
+### 专注于兴趣，而非目标
+
+如果你每周花20-30小时专注于建立编程的兴趣，你会实现成为一名Web开发者的目标。如果你专注于在几个月内成为一名Web开发者的目标，你不会从中收获什么，返回会很有压力。
+
+### 单独学习是痛苦的
+
+1. 找一个导师
+2. 寻找一个社区
+
+
+### 编写项目
 
 ## Share(网络编程和Socket概要)
 

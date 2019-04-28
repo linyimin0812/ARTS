@@ -43,3 +43,15 @@
 > Share: [Typescript实现一个DedupeAPI类](./docs/3rd-week/3rd-week.md#Share)
 > 
 > Tip: [Markdown TO插件生成markdown目录](./docs/3rd-week/3rd-week.md#Tip)
+
+## [4th Week](./docs/4th-week/4th-week.md)
+
+> Time: 2019.04.22 - 2019.04.28
+>
+> Algorithm: [First Missing Positive](./docs/4th-week/4th-week.md#algorithm)
+>  
+> Review: [What are some of the best ways to learn programming?](./docs/4th-week/4th-week.md#review)
+> 
+> Share: [网络编程和Socket概要](./docs/4th-week/4th-week.md#share)
+> 
+> Tip: [VSCode使用技巧](./docs/4th-week/4th-week.md#tip)
