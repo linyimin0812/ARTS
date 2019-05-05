@@ -55,3 +55,15 @@
 > Share: [网络编程和Socket概要](./docs/4th-week/4th-week.md#share)
 > 
 > Tip: [VSCode使用技巧](./docs/4th-week/4th-week.md#tip)
+
+## [5th Week](./docs/5th-week/5th-week.md)
+
+> Time: 2019.04.29 - 2019.05.05
+>
+> Algorithm: [Merge K Sorted Lists](./docs/5th-week/5th-week.md#algorithm)
+>  
+> Review: [7 Critical Tips to Learn Programming Faster?](./docs/5th-week/5th-week.md#review)
+> 
+> Tip: [警惕整数乘法溢出漏洞](./docs/5th-week/5th-week.md#tip)
+> 
+> Share: [使用wireshark查找socket连失败](./docs/5th-week/5th-week.md#share)
