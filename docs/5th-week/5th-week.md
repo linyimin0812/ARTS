@@ -6,7 +6,7 @@
 
 > Tip: 警惕整数乘法溢出漏洞
 > 
-> Share: 使用wireshark查找socket连失败
+> Share: 使用wireshark查找socket连接失败
 
 <!-- TOC -->
 
