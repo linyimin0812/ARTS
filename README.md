@@ -67,3 +67,15 @@
 > Tip: [警惕整数乘法溢出漏洞](./docs/5th-week/5th-week.md#tip)
 > 
 > Share: [使用wireshark查找socket连失败](./docs/5th-week/5th-week.md#share)
+
+## [6th Week](./docs/6th-week/6th-week.md)
+
+> Time: 2019.05.06 - 2019.05.12
+>
+> Algorithm: [Evaluate Reverse Polish Notation](./docs/6th-week/6th-week.md#algorithm)
+>  
+> Review: [Process  Environment](./docs/6th-week/6th-week.md#review)
+> 
+> Tip: [由"socket程序listen之后不accept"说起](./docs/6th-week/6th-week.md#tip)
+> 
+> Share: [域名及网络地址](./docs/6th-week/6th-week.md#share)
