@@ -8,42 +8,6 @@
 > 
 > Share: 域名及网络地址 
 
-<!-- TOC -->
-
-- [Algorithm](#algorithm)
-  - [Evaluate Reverse Polish Notation](#evaluate-reverse-polish-notation)
-  - [解题思路](#%E8%A7%A3%E9%A2%98%E6%80%9D%E8%B7%AF)
-  - [代码实现](#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0)
-- [Review](#review)
-  - [main 函数](#main-%E5%87%BD%E6%95%B0)
-  - [进程终止](#%E8%BF%9B%E7%A8%8B%E7%BB%88%E6%AD%A2)
-    - [exit 函数](#exit-%E5%87%BD%E6%95%B0)
-    - [atexit 函数](#atexit-%E5%87%BD%E6%95%B0)
-  - [命令行参数](#%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%8F%82%E6%95%B0)
-    - [例子](#%E4%BE%8B%E5%AD%90)
-  - [环境变量列表](#%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E5%88%97%E8%A1%A8)
-  - [C程序的内存布局](#c%E7%A8%8B%E5%BA%8F%E7%9A%84%E5%86%85%E5%AD%98%E5%B8%83%E5%B1%80)
-  - [共享库](#%E5%85%B1%E4%BA%AB%E5%BA%93)
-  - [内存分配](#%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D)
-    - [关于内存操作会存在的一些错误](#%E5%85%B3%E4%BA%8E%E5%86%85%E5%AD%98%E6%93%8D%E4%BD%9C%E4%BC%9A%E5%AD%98%E5%9C%A8%E7%9A%84%E4%B8%80%E4%BA%9B%E9%94%99%E8%AF%AF)
-  - [环境变量](#%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F)
-    - [获取环境变量](#%E8%8E%B7%E5%8F%96%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F)
-    - [设置环境变量](#%E8%AE%BE%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F)
-  - [`setjmp`和`longjmp`函数](#setjmp%E5%92%8Clongjmp%E5%87%BD%E6%95%B0)
-- [Tip](#tip)
-  - [由socket程序listen之后不accept说起](#%E7%94%B1socket%E7%A8%8B%E5%BA%8Flisten%E4%B9%8B%E5%90%8E%E4%B8%8Daccept%E8%AF%B4%E8%B5%B7)
-  - [参考链接](#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5)
-- [Share](#share)
-  - [域名及网络地址](#%E5%9F%9F%E5%90%8D%E5%8F%8A%E7%BD%91%E7%BB%9C%E5%9C%B0%E5%9D%80)
-    - [域名系统(DNS)](#%E5%9F%9F%E5%90%8D%E7%B3%BB%E7%BB%9Fdns)
-    - [域名记录类型](#%E5%9F%9F%E5%90%8D%E8%AE%B0%E5%BD%95%E7%B1%BB%E5%9E%8B)
-    - [域名解析过程](#%E5%9F%9F%E5%90%8D%E8%A7%A3%E6%9E%90%E8%BF%87%E7%A8%8B)
-  - [Ubuntu获取本地DNS服务器地址](#ubuntu%E8%8E%B7%E5%8F%96%E6%9C%AC%E5%9C%B0dns%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%9C%B0%E5%9D%80)
-  - [查询过程](#%E6%9F%A5%E8%AF%A2%E8%BF%87%E7%A8%8B)
-  - [参考链接](#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5-1)
-
-<!-- /TOC -->
-
 ## Algorithm
 
 ### Evaluate Reverse Polish Notation
@@ -325,6 +289,152 @@ void longjmp(jmp_buf, int val);
 ```
 
 - `setjmp`: 当直接调用时返回0, longjmp调用时,返回val指定的值 
+
+所以在调用`longjmp`时可以通过指定`val`的值来表示在哪调用了`longjmp`这个函数
+
+我们还需要注意的一个问题是：<font color="#dd0000">在调用`setjmp`函数之后，有变量发生了变化，那么调用完`longjmp`函数之后，这些变化的变量的状态如何变化呢？</font>答案是<font color="#dd0000">不确定</font>。下面我们来看`Automatic`、`Register`、`Volatile`、`global`、`Static`定义的变量对应的变化。
+
+```c
+#include "apue.h"
+#include <setjmp.h>
+
+static void f1(int, int, int, int);
+static void f2(void);
+
+static jmp_buf jmp_buffer;
+static int global_var;
+
+int main(int argc, char *argv[]) {
+    int auto_avar;
+    register int register_var;
+    volatile int volatile_var;
+    static int static_var;
+
+    global_var = 1;
+    auto_avar = 2;
+    register_var = 3;
+    volatile_var = 4;
+    static_var = 5;
+
+    if (setjmp(jmp_buffer) != 0) {
+        printf("After longjmp: \n");
+
+        printf("global = %d, automatic = %d, register = %d, volatile = %d, static = %d\n", global_var, auto_avar,
+               register_var, volatile_var, static_var);
+
+        exit(0);
+    } else {
+        /*
+         * Change variables after setjmp, but before longjmp
+         */
+        global_var = 91;
+        auto_avar = 92;
+        register_var = 93;
+        volatile_var = 94;
+        static_var = 95;
+
+        f1(auto_avar, register_var, volatile_var, static_var);
+        exit(0);
+    }
+}
+
+static void f1(int i, int j, int k, int l) {
+    printf("in f1(): \n");
+    printf("global = %d, automatic = %d, register = %d, volatile = %d, static = %d\n", global_var, i,
+           j, k, l);
+    f2();
+}
+
+static void f2(void) {
+    longjmp(jmp_buffer, 1);
+}
+```
+
+1. 普通编译`gcc effect-of-longjmp-on-various-types-of-variables.c`
+
+**执行结果**
+
+```
+in f1(): 
+global = 91, automatic = 92, register = 93, volatile = 94, static = 95
+After longjmp: 
+global = 91, automatic = 92, register = 93, volatile = 94, static = 95
+```
+
+2. 使用优化编译`gcc -O effect-of-longjmp-on-various-types-of-variables.c`
+
+```
+in f1(): 
+global = 91, automatic = 92, register = 93, volatile = 94, static = 95
+After longjmp: 
+global = 91, automatic = 2, register = 3, volatile = 94, static = 95
+```
+
+从上面的结果，我们可以知道优化对`global`、`static`、`volatile`变量是没有影响的。
+
+setjmp手册中指出：<font color="#dd0000">存储在内存中的变量值与调用`longjmp`函数时保持一致，但是保存在CPU或者寄存器中的变量会回滚到`setjmp`函数调用时的值</font>
+
+由于在没有优化时，所有的变量都是保存在内存中的，所以不会发生回滚，而在优化之后，`Automatic`、`Register`定义的变量会保存在寄存器中，而`Volatile`定义的变量仍会保存在内存中。所以在编译时使用优化选项后，执行`longjmp`函数之后，这两个变量会发生回滚。
+
+<font color="#dd0000">在使用`setjmp`编写稳定性的代码时，应该使用`volatile`属性</font>
+
+#### 使用`Automatic`变量存在的隐藏问题
+
+使用`automatic`变量(局部变量)的一项基本准则： <font color="#dd0000">不要在函数外引用被调用函数中声明的局部变量</font>
+
+如下面的例子：
+
+```c
+#include <stdio.h>
+FILE * open_data(void) {
+  FILE *fp;
+  
+  char databuf[BUF_SIZE];
+  
+  if ((fp = fopen("datafile", "r")) == NULL ) {
+    return NULL;
+  }
+  
+  if (setvbuf(fp, databuf, _IOLBF, BUF_SIZE) != 0) {
+    return (NULL);
+  }
+  return (fp);
+}
+```
+
+这个程序错误的地方在于调用函数使用被调函数栈空间(databuf)，当被调函数执行完成之后，栈空间会被回收，所以会发生混乱。以下方案可以解决这个问题：
+
+从全局内存中分配内存给`databuf`变量：
+
+1. 静态内存： `static`或者`extern`关键字修饰
+2. 动态内存： 使用`alloc`函数从堆中申请内存
+
+### 进程的资源限制
+
+每个进程都会有一些资源的限制，我们可以通过`getrlimit`和`setrlimit`函数获取或者修改这些资源限制信息。
+
+```c
+#include<sys/resource.h>
+
+int getrlimit(int resource, struct rlimit *rlptr);
+
+int setrlimit(int resource, const struct rlimit *rlptr);
+```
+
+`strcut rlimit`数据结构的内容：
+
+```C
+struct rlimit {
+  rlimit_t rlim_cur;  // 当前的资源限制值(soft limit)
+  rlimit_t rlim_max;  // rlim_cur的最大值(hard limit)
+}
+``` 
+
+关于资源限制修改的三条准则：
+
+1. soft limit的值要小于等于hard limit的值
+2. 进程可以减小hard limit的值，但是这个操作对于普通用户来说是不可逆的
+3. 只要超级用户的进程才能增大hard limit对应的值。
 
 ## Tip
 
