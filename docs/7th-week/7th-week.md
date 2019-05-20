@@ -6,8 +6,7 @@
 >
 > Tip: `wc`统计文件的行数,单词数及字节数
 > 
-> Share: 优于select的epoll
-
+> Share: IO复用
 
 ## Algorithm
 

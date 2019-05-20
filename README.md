@@ -79,3 +79,15 @@
 > Tip: [由"socket程序listen之后不accept"说起](./docs/6th-week/6th-week.md#tip)
 > 
 > Share: [域名及网络地址](./docs/6th-week/6th-week.md#share)
+
+## [7th Week](./docs/7th-week/7th-week.md)
+
+> Time: 2019.05.13 - 2019.05.19
+>
+> Algorithm: [Valid parentheses](./docs/7th-week/7th-week.md#algorithm)
+>  
+> Review: [File I/O](./docs/7th-week/7th-week.md#review)
+> 
+> Tip: [`wc`统计文件的行数,单词数及字节数](./docs/7th-week/7th-week.md#tip)
+> 
+> Share: [IO复用](./docs/7th-week/7th-week.md#share)
