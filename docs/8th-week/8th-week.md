@@ -1,17 +1,129 @@
 > Time: 2019.05.20 - 2019.05.26
 >
-> Algorithm: 
+> Algorithm: Climbing Stairs
 >  
-> Review: 
+> Review: File Types
 >
 > Tip: `man`命令的使用
 > 
-> Share: 
+> Share: 不可中断进程和僵尸进程
 
 
 ## Algorithm
 
+### Climbing Stairs
+
+You are climbing a stair case. It takes n steps to reach to the top.
+
+Each time you can either climb 1 or 2 steps. In how many distinct ways can you climb to the top?
+
+**Note**: Given n will be a positive integer.
+
+**Example 1:**
+
+```
+Input: 2
+Output: 2
+Explanation: There are two ways to climb to the top.
+1. 1 step + 1 step
+2. 2 steps
+```
+
+**Example 2:**
+
+```
+Input: 3
+Output: 3
+Explanation: There are three ways to climb to the top.
+1. 1 step + 1 step + 1 step
+2. 1 step + 2 steps
+3. 2 steps + 1 step
+```
+
+### 解法
+
+很明显,很容易能想到使用递归实现.
+
+递归公式: f(n) = f(n-1) + f(n-2)
+退出条件: 
+
+```
+1. n = 1 => return 1;
+2. n = 2 => return 2;
+```
+
+由于会存在很多重复的计算,所以使用一个`memo`数组存储已经计算过的结果.
+
+### 代码实现
+```C
+int climb_stairs(int n, int memo[]) {
+    if (n <= 0) {
+        return 0;
+    }
+    
+    if (n == 1) {
+        return 1;
+    }
+    if (n == 2) {
+        return 2;
+    }
+    if (memo[n] > 0) {
+        return memo[n];
+    }
+    memo[n] = climb_stairs(n - 1, memo) + climb_stairs(n-2, memo);
+    return memo[n];
+}
+
+
+
+int climbStairs(int n){
+    int memo[n+1];
+    for (int i = 0; i <= n; i++) {
+        memo[i] = 0;
+    }
+    return climb_stairs(n, memo);
+}
+```
+
 ## Review
+
+### File Types
+
+1. 普通文件
+2. 文件夹
+3. 块设备文件
+   
+提供缓存,可以随机访问固定大小的设备.
+
+4. 字符设备文件
+
+不提供缓存的设备文件.
+
+5. FIFO文件
+
+用于不同进程间的通信,有时也叫管道.
+
+6. socket文件
+
+用于进程间的网络通信.
+
+7. 符号链接文件
+
+指向其他文件的文件.
+
+补充: 字符设备与块设备
+
+1. 字符设备
+
+提供连续的数据流,应用程序应该按照顺序读取,不支持随机存取,支持按字节/字符读取数据.例如键盘和串口等.
+
+2. 块设备
+
+应用程序可以随机访问设备数据，程序可自行确定读取数据的位置。硬盘、软盘、CD-ROM驱动器和闪存都是典型的块设备，应用程序可以寻址磁盘上的任何位置，并由此读取数据。此外，数据的读写只能以块(通常是512B)的倍数进行。与字符设备不同，块设备并不支持基于字符的寻址。
+
+### 参考链接
+
+[字符设备、块设备与网络设备](https://www.jianshu.com/p/477c5b583fbe)
 
 ## Tip
 
