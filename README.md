@@ -91,3 +91,15 @@
 > Tip: [`wc`统计文件的行数,单词数及字节数](./docs/7th-week/7th-week.md#tip)
 > 
 > Share: [IO复用](./docs/7th-week/7th-week.md#share)
+
+## [8th Week](./docs/8th-week/8th-week.md)
+
+> Time: 2019.05.20 - 2019.05.26
+>
+> Algorithm: [Climbing Stairs](./docs/8th-week/8th-week.md#algorithm)
+>  
+> Review: [File Types](./docs/8th-week/8th-week.md#review)
+> 
+> Tip: [`man`命令的使用](./docs/8th-week/8th-week.md#tip)
+> 
+> Share: [不可中断进程和僵尸进程](./docs/8th-week/8th-week.md#share)
