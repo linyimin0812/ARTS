@@ -8,6 +8,29 @@
 > 
 > Share: 不可中断进程和僵尸进程
 
+<!-- TOC -->
+
+- [Algorithm](#algorithm)
+  - [Climbing Stairs](#climbing-stairs)
+  - [解法](#%E8%A7%A3%E6%B3%95)
+  - [代码实现](#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0)
+- [Review](#review)
+  - [File Types](#file-types)
+  - [参考链接](#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5)
+- [Tip](#tip)
+  - [`man`命令的使用](#man%E5%91%BD%E4%BB%A4%E7%9A%84%E4%BD%BF%E7%94%A8)
+- [Share](#share)
+  - [不可中断进程和僵尸进程](#%E4%B8%8D%E5%8F%AF%E4%B8%AD%E6%96%AD%E8%BF%9B%E7%A8%8B%E5%92%8C%E5%83%B5%E5%B0%B8%E8%BF%9B%E7%A8%8B)
+    - [进程状态](#%E8%BF%9B%E7%A8%8B%E7%8A%B6%E6%80%81)
+    - [僵尸进程](#%E5%83%B5%E5%B0%B8%E8%BF%9B%E7%A8%8B)
+    - [其他相关概念](#%E5%85%B6%E4%BB%96%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5)
+      - [进程组](#%E8%BF%9B%E7%A8%8B%E7%BB%84)
+      - [会话](#%E4%BC%9A%E8%AF%9D)
+    - [案例分析](#%E6%A1%88%E4%BE%8B%E5%88%86%E6%9E%90)
+      - [iowait分析](#iowait%E5%88%86%E6%9E%90)
+      - [僵尸进程](#%E5%83%B5%E5%B0%B8%E8%BF%9B%E7%A8%8B-1)
+
+<!-- /TOC -->
 
 ## Algorithm
 
