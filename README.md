@@ -103,3 +103,15 @@
 > Tip: [`man`命令的使用](./docs/8th-week/8th-week.md#tip)
 > 
 > Share: [不可中断进程和僵尸进程](./docs/8th-week/8th-week.md#share)
+
+## [9th Week](./docs/9th-week/9th-week.md)
+
+> Time: 2019.05.20 - 2019.05.26
+>
+> Algorithm: [数组中重复的数字](./docs/9th-week/9th-week.md#algorithm)
+>  
+> Review: [Overview of Blocking vs Non-Blocking](./docs/9th-week/9th-week.md#review)
+> 
+> Tip: [对`read`及`write`函数的封装](./docs/9th-week/9th-week.md#tip)
+> 
+> Share: [理解软中断](./docs/9th-week/9th-week.md#share)
