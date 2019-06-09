@@ -106,7 +106,7 @@
 
 ## [9th Week](./docs/9th-week/9th-week.md)
 
-> Time: 2019.05.20 - 2019.05.26
+> Time: 2019.05.27 - 2019.06.02
 >
 > Algorithm: [数组中重复的数字](./docs/9th-week/9th-week.md#algorithm)
 >  
@@ -115,3 +115,15 @@
 > Tip: [对`read`及`write`函数的封装](./docs/9th-week/9th-week.md#tip)
 > 
 > Share: [理解软中断](./docs/9th-week/9th-week.md#share)
+
+## [10th Week](./docs/10th-week/10th-week.md)
+
+> Time: 2019.06.03 - 2019.06.09
+>
+> Algorithm: [Longest Valid Parentheses](./docs/10th-week/10th-week.md#algorithm)
+>  
+> Review: [how-to-self-detect-a-memory-leak-in-node](./docs/10th-week/10th-week.md#review)
+> 
+> Tip: [Linux管道的使用](./docs/10th-week/10th-week.md#tip)
+> 
+> Share: [地址族和数据序列](./docs/10th-week/10th-week.md#share)
