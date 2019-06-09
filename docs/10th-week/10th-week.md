@@ -1,15 +1,132 @@
 > Time: 2019.06.03 - 2019.06.09
 >
-> Algorithm: 
+> Algorithm: Longest Valid Parentheses
 >  
-> Review: 
+> Review: how-to-self-detect-a-memory-leak-in-node
 >
 > Tip: Linux管道的使用
 > 
-> Share: 
+> Share: 地址族和数据序列
 
 
 ## Algorithm
+
+### Longest Valid Parentheses
+
+> Given a string containing just the characters '(' and ')', find the length of the longest valid (well-formed) parentheses substring.
+
+**Example 1:**
+
+```
+Input: "(()"
+Output: 2
+Explanation: The longest valid parentheses substring is "()"
+```
+
+**Example 2:**
+
+```
+Input: ")()())"
+Output: 4
+Explanation: The longest valid parentheses substring is "()()"
+```
+
+### 解法1: 暴力法
+
+使用两重循环, 取出字符串对应的所有子串, 使用栈判断子串是否满足要求,返回满足要求的最长子串的长度,即为结果.
+
+<pre>
+时间复杂度: O(N ^ 3)
+空间复杂度: O(N)
+<font color="#dd0000">Time Limit Exceeded</font>
+</pre>
+
+
+#### 代码实现
+
+```C++
+class Solution {
+private:
+    bool isValid(string s) {
+        std::stack<char> left;
+        for (int i = 0; i < s.size(); i++) {
+            if (s[i] == '(') {
+                left.push(s[i]);
+                continue;
+            }
+            if (left.empty()) {
+                return false;
+            }
+            char leftChar = left.top(); left.pop();
+        }
+        return left.empty();
+    }
+public:
+    int longestValidParentheses(string s) {
+        int max = 0;
+        for(int i = 0; i < s.size(); i++) {
+            for (int j = 2; j <= s.size() - i; j++) {
+                string sub = s.substr(i, j);
+                if (isValid(sub)) {
+                    max = j > max ? j : max;
+                }
+            }
+        }
+        return max;
+    }
+};
+```
+
+### 解法2
+
+使用栈数据结构进行解题.
+
+在具体描述算法之前,我们先说明一个定义:
+
+<font color="#dd0000">栈中的第一个元素是每个子串开始的前一个索引位置</font>
+
+所以刚开始时, 先把`-1`压入栈中, 然后遍历字符串, 若是`(`则将其对应的索引压入栈中, 否则移除栈顶元素, 若此时栈为空,说明没有符号与当前符号匹配, 所以将当前元素对应的索引压入栈中, 开始下一个子串的长度的求解(满足之前的定义).若栈不为空,使用当前元素索引减去此时栈顶元素的值,得到当前匹配子串的长度, 取最大长度(和之前匹配的子串长度进行对比).然后接着遍历,直至遍历完整个字符串,即可得到答案.
+
+<pre>
+时间复杂度分析: O(N)
+空间复杂度分析:O(N)
+</pre>
+
+#### 代码实现
+
+```C++
+class Solution {
+public:
+    int longestValidParentheses(string s) {
+        std::stack<int> left;
+        int max = 0;
+        int len = 0;
+        left.push(-1);
+        for (int i = 0; i < s.size();  i++) {
+            if (s[i] == '(') {
+                left.push(i);
+            } else {
+                left.pop();
+                if (left.empty()) {
+                    left.push(i);
+                } else {
+                    len = i - left.top();
+                    max = max > len ? max : len;
+                }
+            }
+        }
+        return max;
+    }
+};
+```
+
+### 动态规划
+
+TODO:
+
+### 参考链接
+
+[Solution](https://leetcode.com/problems/longest-valid-parentheses/solution/)
 
 ## Review
 
