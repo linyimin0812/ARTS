@@ -60,3 +60,201 @@ $ cat fifo_file
 [linux shell命名管道FIFO（多进程动态并发）](https://blog.csdn.net/qq_32642039/article/details/78624210)
 
 ## Share
+
+### 地址族和数据序列
+
+#### 网络地址
+
+IP地址是为了收发网络数据而分配给计算机的的值，一个IP可以标识一台主机。IP地址分为两类：
+
+- IPv4(Internet Protocol version 4)： 4字节地址族
+- IPv6(Internet Protocol version 6)： 16字节地址族
+
+IPv6是为解决IPv4 IP地址耗尽的问题而提出的新标准。
+
+
+IPv4的IP地址有两部分组成：`网络地址`及`主机地址`。
+
+
+网络地址分为A、B、C、D、E五类
+
+|类型|网络地址|网络地址范围|主机地址|
+|:---:|:---|:---|:---|
+|A|`0`(1个字节)|0~127|3个字节|
+|B|`01`(2个字节)|128~191|2个字节|
+|C|`011`(3个字节)|192~223|1个字节|
+|D|`0111`4个字节|
+
+#### 端口号
+
+网卡通过`IP`地址接收到数据之后，拷贝到内核，内核通过端口号将数据分配给相应的套接字，套接字在将数据传给应用程序。从这可以知道，套接字是在同一操作系统中为了区分不同套接字而设置的，所以不能将一个端口号分配给不同的套接字。
+
+
+端口号由16位构成，所以可分配的端口号范围是0~65535。但0~1023是知名端口号，一般分配给特定的应用程序。
+
+需要注意的是:<font color="#dd0000">端口号不能重复，但TCP套接字和UDP套接字不会共用端口号，所以是允许重复的</font>
+
+
+#### IPv4地址信息的表示
+
+由上面的知识我们可以知道，地址由三部分组成：`地址族`（IPv4、IPv6）、`IP地址`、`端口号`
+
+在Linux下使用`sockaddr`和`sockaddr_in`两个结构体来处理网络通信的地址。
+
+我们在调用`bind`函数绑定地址时，使用`sockaddr`的指针作为参数进行传递。但是`sockaddr`是一个通用的结构体，可以表示多种socket的地址。例如`AF_INET`及`AF_UNIX`。
+
+##### sockaddr
+
+
+```C
+struct sockaddr {
+  unsigned short sa_family; // 2字节
+  char sa_data[14];         // 14字节，表示协议地址
+}
+```
+
+根据`sockaddr`的定义，变量成员`sa_data`用于指定协议信息。但这个成员变量的操作对于程序员来说，是难以操作的，例如指定一个`AF_INET`，我们需要在`sa_data`中指定`IP`及`port`两个数据。这需要程序员了解`bind`函数的底层实现，才能完成相应的赋值。所以系统提供了另外一个数据结构`sockaddr_in`简化相应的复制操作，将`sockaddr`的操作留给操作系统。
+
+
+##### sockaddr_in
+
+```C
+struct sockaddr_in {
+  short sin_family;         // 2个字节， 地址族： AF_INET、AF_INET6
+  unsigned short sin_port;  // 两个字节，表示端口
+  struct in_addr sin_addr;  // 4字节（IPv4地址）
+  char sin_zero[8];         // 8字节
+}
+
+struct in_addr {
+  unsigned long s_addr;     // 4 字节
+}
+```
+
+`sockaddr_in`用于IPv4协议族。可以发现`sockaddr_in`将`sockaddr`中的`sa_data`分成了**sin_port**, **sin_addr**及**sin_zero**（为保持与`sockaddr`一致）三部分，这样就可以很轻易的完成IPv4协议族的套接字地址赋值了。
+
+
+#### 网络字节序与地址变换
+
+在不同的CPU中，内存空间保存数据的方式存在两种方式：
+
+- 大端序：最高有效位（MSB）对应实际地址
+- 小端序：最低有效位（LSB）对应实际地址
+
+**网络字节序**：通过网络传输数据时约定的统一的方式——`大端序`称为网络字节序。
+
+#### 字节序转换(Endian Conversion)
+
+##### 主机字节序转网络字节序
+
+- unsigned short htos(unsigned short): 将`short`型数据从主机字节序转成网络字节序
+- unsigned long htol(unsigned long): 将`long`型数据从主机字节序转成网络字节序
+
+##### 网络字节序转主机字节序
+
+- unsigned short ntos(unsigned short): 将`short`型数据从网络字节序转成主机字节序
+- unsigned long ntol(unsigned long): 将`long`型数据从网络字节序转成主机字节序
+
+##### IP地址ASCII字符串与网络字节序的二进制间的转换
+
+```C
+#include<arpa/inet.h>
+
+// 将strptr指向的字符串转成网络字节序的二进制值，并保存在addrptr指针指向的数据结构中
+int inet_aton(const char *strptr, struct in_addr *addrptr);
+
+/*
+  返回： 若字符串有效则为32位二进制网络字节序的IPv4地址，否则为INADDR_NONE
+*/
+in_addr_t inet_addr(const char *strptr);
+
+// 将网络字节序的二进制转换成ASCII字符串IP地址
+char *inet_ntos(struct in_addr inaddr);
+```
+
+**既支持IPv4又支持IPv6**的函数
+
+```c
+#include<arpa/inet.h>
+
+// 将strptr指向的字符串形式IP地址，装成网络字节序二进制并保存在指针addrprt中
+// 成功返回1， 非有效输入返回0，出错返回-1
+int inte_pton(int family, const char *strptr, void *addrprt);
+
+// 将addrstr指向的网络字节序二进制IP转成字符串形式的IP地址，并保存在字符指针strptr中，len指定strprt指向内容的大小
+// 成功返回指向结果的指针，若出错则返回NULL
+const char *inet_ntop(int family, const void *addrstr, char *strptr, size_t len)
+```
+
+#### 习题
+
+（1）IP地址族IPv4和IPv6有何区别？在何种背景下诞生了IPv6？
+
+IPv4为4字节地址族，而IPv6为16字节地址族，IPv6能表示的地址数目远远大于IPv4的数目。在IPv4所表示的IP地址不够用的背景下诞生了IPv6。
+
+（2）通过IPv4网络ID、主机ID及路由器的关系说明向公司局域网中的计算机传输数据的过程。
+
+网络ID是为标识网络而设的一部分IP地址，我们常用的有4类。其中A类包含的网络数最少，但是每个网络中包含的主机数最多。当我们想向公司的局域网发送数据时，路由器会根据网络ID找到目标主机所处网络对应的转发端口，然后将数据包从对应端口转发出去，这个过程可能会经过多个路由器或者交换机，当数据包到达目标主机所在的局域网后，根据主机ID找到对应的主机，然后将数据交给给主机的网卡，此时便完成了数据的传输。
+
+（3）套接字地址分为IP地址和端口号。为什么需要IP地址和端口号？或者说，通过IP可以区分那些对象？通过端口号可以区分那些对象？
+
+IP地址是为了标识不同通信主机的，即确定收发数据的主机。而端口号是为了标识同一系统下多个套接字。`IP+port`提供另一种能唯一标识网络中不同进程的方式。
+
+（4）请说明IP地址的分类方法，并据此说出下面这些IP地址的分类。
+
+|类别|网络ID前缀|网络ID长度|首字节网络ID范围|主机ID长度|
+|:---:|:---:|:---:|:---:|:---:|
+|A|0|1字节|0~127|3字节|
+|B|10|2字节|128~191|2字节|
+|C|110|3字节|192~223|1字节|
+|D|1110|4字节|224~239|多播IP地址|
+
+- 214.121.212.102（C类地址）
+- 120.101.122.89（A类地址）
+- 129.78.102.211（B类地址）
+
+（5）计算机通过路由器或者交换机连接到互联网。请说出路由器和交换机的作用。
+
+若想构建网络，需要一种物理设备完成外网与本网主机之间数据的交换。这种设备就是路由器或交换机。一般来说交换机用于构建本地局域网。而路由器将多个局域网构建成一个更大的网络。
+
+（6）什么是知名端口？其范围是多少？知名端口中具有代表性的HTTP和FTP端口号各是多少？
+
+知名端口是指分配给特定应用程序使用的端口号。其范围是：0~1023。HTTP的默认端口是80，FTP默认的端口号是21.
+
+（7）向套接字分配地址的bind函数原型如下：
+
+`int bind(int sockfd, struct sockaddr *myaddr, socklen_t addr_len);`
+
+而调用时则用：
+
+`bind(serv_sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr));`
+
+此处`serv_addr`为`scokadd_in`结构体变量。与函数原型不同，传入的是`sockaddr_in`结构体变量，请说明原因。
+
+`sockaddr`可以用于多种协议族，主要提供给操作系统使用，`sockaddr_in`是提供给开发者用的，用于IPv4和IPv6地址的定义。
+
+
+（8）请解释大端序、小端序、网络字节序。并说明为何需要网络字节序。
+
+**大端序**： 最高有效位对应实际地址
+
+**小端序**： 最低有效位对应实际地址
+
+**网络序**： 规定网络传输时使用的字节序——大端序
+
+网络字节序为了实现不同存储方式的计算机间的数据传输而定义的一种字节序，在不同存储方式的计算机内核内，接收到消息后可以进行准确的转换。
+
+（9）大端序计算机希望把4字节整数型数据12传递到小端序计算机。请说出数据传输过程中发生的字节序变换过程。
+
+大端序计算机直接将数据传送给小端序计算机，小端序计算机收到数据后将其转换成小端序在交由上层应用程序。
+
+（10）怎样表示回送地址？其含义是什么？如果向回送地址传输数据将会发生什么情况？
+
+回送地址指的是计算机自身的IP地址可以使用`127.0.0.1`或者`localhost`表示。可以正确传输，相当于服务器端和客户端在同一计算机内运行。
+
+#### 参考链接
+
+[Why do we cast sockaddr_in to sockaddr when calling bind()?](https://stackoverflow.com/questions/21099041/why-do-we-cast-sockaddr-in-to-sockaddr-when-calling-bind/21099196)
+
+[sockaddr和sockaddr_in的区别](https://kenby.iteye.com/blog/1149001)
+
