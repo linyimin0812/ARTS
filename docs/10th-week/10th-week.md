@@ -13,6 +13,106 @@
 
 ## Review
 
+[how-to-self-detect-a-memory-leak-in-node](https://www.nearform.com/blog/how-to-self-detect-a-memory-leak-in-node/)
+
+### 追踪Node应用中的内存泄露
+
+使用Node的--flag标签, `memwatch`和`heapdump`两个很棒的工具完成Node应用的内存泄露跟踪
+
+#### 一个简单的内存泄露例子
+
+```javascript
+const http = require('http');
+
+var server = http.createServer((req, res) => {
+ for (var i=0; i<1000; i++) {
+ server.on('request', function leakyfunc() {});
+ }
+
+ res.end('Hello World\n');
+}).listen(1337, '127.0.0.1');
+server.setMaxListeners(0);
+
+console.log('Server running at http://127.0.0.1:1337/. Process PID: ', process.pid);
+```
+
+上诉的代码,我们为每个请求添加了额外的1000个监听者.然后使用`autocannonn`进行压测. `autocannon`是一个node实现的压测工具, 使用`sudo npm install autocannon -g`进行安装.
+
+在一个终端中运行`autocannon -c 1 -d 60 http://localhost:1337`进行施压. 
+
+![压测结果](images/benchmark.png)
+
+然后打开另一个终端使用`top | head -1; top | grep <process pid>`上面例子对应的进程的内存使用量非常高,而且很不稳定. 
+
+![内存使用情况](images/memory-usage.png)
+
+接下来我们如何进行分析呢?
+
+#### 内存泄露探测
+
+`node-memwatch`更适合检测内存泄露. 首先在我们的项目中使用`npm install --save node-memwatch`安装, 然后在代码中添加:
+
+```javascript
+const memwatch = require('node-memwatch')
+
+// 添加泄漏事件的监听器
+memwatch.on('leak', (info) => {
+  console.log('Memory leak detected:\n', info)
+})
+```
+
+然后继续运行我们的程序, 现在终端会输出以下结果:
+
+![内存泄露](images/memory-leak.png)
+
+可以看到`memwatch`检测到了内存泄露, `memwatch`对泄露事件的定义是: 如果经过连续5次GC, 内存仍被持续分配而没有得到释放
+
+#### 内存泄露分析
+
+接下来, 我们要找出程序哪里出现了内存泄露.虽然我们上面的例子泄露很明显, 但是分析的步骤是一样的:
+
+1. 在不同的时间间隔创建堆存储
+2. 比较不同时间间隔的堆存储, 找出什么增长了
+
+有两种方式可以完成上述分析:
+
+1. `--flag`标签
+
+```shell
+$ node --inspect index.js
+```
+
+打开浏览器,在地址栏输入`chrome://inspect/`, 然后选择`inspect`
+
+![浏览器-insepct](images/inspect.png)
+
+使用命令`autocannon -c 1 -d 60 http://localhost:1337`加压
+
+然后点击取得快照, 30秒后在取一次
+
+![取得快照](images/take-snapshot.png)
+
+![快照信息](images/snapshot.png)
+
+关于内存更精彩的分析可以查看[Taming The Unicorn: Easing JavaScript Memory Profiling In Chrome DevTools](https://addyosmani.com/blog/taming-the-unicorn-easing-javascript-memory-profiling-in-devtools/)
+
+2. 使用`Heapdump`
+
+`node-heapdump`是一个非常好的工具, 可以在应用代码内部生成一个快照.关于更过`heapdump`可以查看[blog post](https://strongloop.com/strongblog/how-to-heap-snapshots/).现在我们直接在代码中使用`heapdump`, 在每次检查到内存泄露时, 将V8栈快照信息写到磁盘上.
+
+```javascript
+memwatch.on('leak', (info) => {
+  console.error('Memory leak detected:\n', info);
+  heapdump.writeSnapshot((err, filename) => {
+    if (err) console.error(err);
+    else console.error('Wrote snapshot: ' + filename);
+})
+```
+
+![](images/heapdump.png)
+
+可以看到生成了相关的快照文件, 导入DevTools即可得到与之前`--inspect`一样的效果.
+
 ## Tip
 
 ### Linux管道的使用
