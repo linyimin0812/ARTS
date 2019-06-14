@@ -8,11 +8,15 @@
 > 
 > Share: 
 
-
-
 ## Algorithm
 
 ## Review
+
+[Understanding process.nextTick()](https://howtonode.org/understanding-process-next-tick)
+
+### 参考链接
+
+[Tasks, microtasks, queues and schedules](https://jakearchibald.com/2015/tasks-microtasks-queues-and-schedules/)
 
 ## Tip
 
