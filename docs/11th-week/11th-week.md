@@ -2,7 +2,7 @@
 >
 > Algorithm: 
 >  
-> Review: 
+> Review: Understanding process.nextTick()
 >
 > Tip: shell进程`jobs`,`fg`,`bg`,`wait`命令的使用
 > 
@@ -14,9 +14,80 @@
 
 [Understanding process.nextTick()](https://howtonode.org/understanding-process-next-tick)
 
+`process.nextTick()`函数的作用: 将函数推迟到一个全新的堆栈再执行
+
+如何使用`process.nextTick()`函数?
+
+1. 交叉执行CPU密集型任务与其他事件.
+
+```JavaScript
+var http = require('http');
+
+function compute() {
+    // performs complicated calculations continuously
+    // ...
+    process.nextTick(compute);
+}
+
+http.createServer(function(req, res) {
+     res.writeHead(200, {'Content-Type': 'text/plain'});
+     res.end('Hello World');
+}).listen(5000, '127.0.0.1');
+
+compute();
+```
+
+2. 保持回调函数真正地异步执行
+
+3. `EventEmitter`触发事件
+
+一个类继承了 EventEmitter，而且想在实例化的时候触发一个事件：
+
+```javascript
+const EventEmitter = require('events');
+const util = require('util');
+
+function MyEmitter() {
+  EventEmitter.call(this);
+  this.emit('event');
+}
+util.inherits(MyEmitter, EventEmitter);
+
+const myEmitter = new MyEmitter();
+myEmitter.on('event', () => {
+  console.log('an event occurred!');
+});
+```
+
+不能直接在构造函数里执行 this.emit('event')，因为这样的话后面的回调就永远无法执行。把 this.emit('event') 放在 process.nextTick() 里，后面的回调就可以执行，这才是我们预期的行为：
+
+```javascript
+const EventEmitter = require('events');
+const util = require('util');
+
+function MyEmitter() {
+  EventEmitter.call(this);
+
+  // use nextTick to emit the event once a handler is assigned
+  process.nextTick(() => {
+    this.emit('event');
+  });
+}
+util.inherits(MyEmitter, EventEmitter);
+
+const myEmitter = new MyEmitter();
+myEmitter.on('event', () => {
+  console.log('an event occurred!');
+});
+
+```
+
+
 ### 参考链接
 
 [Tasks, microtasks, queues and schedules](https://jakearchibald.com/2015/tasks-microtasks-queues-and-schedules/)
+
+[Event Loop、计时器、nextTick](https://juejin.im/post/5ab7677f6fb9a028d56711d0#heading-12)
 
 ## Tip
 
