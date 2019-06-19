@@ -4,7 +4,7 @@
 >  
 > Review: 
 >
-> Tip: 
+> Tip: 显示使用最多fd的进程PID
 > 
 > Share: 
 
@@ -91,3 +91,22 @@ class Solution {
     }
 }
 ```
+
+## Review
+
+## Tip
+
+### 显示使用最多fd的进程PID
+
+
+```shell
+sudo find /proc -print | grep -E '/proc/[0-9]+/fd/' | awk -F '/' '{print $3}' | unic -c | sort -nr | head
+```
+
+#### 命令解释
+
+1. `sudo find /proc -print`: 查询`/proc`目录下所有文件
+2. `grep -E '/proc/[0-9]+/fd/'`: 查找所有进程对应的所有`fd`目录
+3. `uniq -c`: 在每列旁边显示每行重复出现的次数
+4. `sort -nr`: 对每行的第一列按数值大小进行排序,并按从小到大进行排序
+5. `head`: 打印前十行
