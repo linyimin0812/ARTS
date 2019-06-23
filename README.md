@@ -136,6 +136,18 @@
 >  
 > Review: [Understanding process.nextTick()](./docs/11th-week/11th-week.md#review)
 > 
-> Tip: [shell进程`jobs`,`fg`,`bg`,`wait`命令的使用](./docs/10th-week/10th-week.md#tip)
+> Tip: [shell进程`jobs`,`fg`,`bg`,`wait`命令的使用](./docs/11th-week/11th-week.md#tip)
 > 
 > Share: [平均负载](./docs/11th-week/11th-week.md#share)
+
+## [12th Week](./docs/12th-week/12th-week.md)
+
+> Time: 2019.06.17 - 2019.06.23
+>
+> Algorithm: [Sqrt(x)](./docs/12th-week/12th-week.md#algorithm)
+>  
+> Review: [Steering the right course for AI](./docs/12th-week/12th-week.md#review)
+> 
+> Tip: [显示使用最多fd的进程PID](./docs/12th-week/12th-week.md#tip)
+> 
+> Share: [并发编程中常见的问题](./docs/12th-week/12th-week.md#share)
